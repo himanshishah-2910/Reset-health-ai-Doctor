@@ -1,5 +1,8 @@
 {
-  "name": "reset-health-ai-doctor",
+  "name": "reset-ai",
   "private": true,
-  "dependencies": {}
+  "type": "module",
+  "dependencies": {
+    "openai": "^4.0.0"
+  }
 }
