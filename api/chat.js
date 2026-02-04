@@ -6,33 +6,32 @@ const openai = new OpenAI({
 
 export default async function handler(req, res) {
   if (req.method !== "POST") {
-    return res.status(405).json({ error: "Only POST allowed" });
+    return res.status(200).json({
+      reply: "API is alive. Use POST method."
+    });
   }
 
   try {
-    const { message } = req.body || {};
+    const { message } = req.body;
 
     if (!message) {
-      return res.status(400).json({ error: "Message is required" });
+      return res.status(400).json({ error: "Message missing" });
     }
 
     const completion = await openai.chat.completions.create({
       model: "gpt-4o-mini",
       messages: [
-        {
-          role: "system",
-          content:
-            "You are a friendly AI health doctor. Give simple, safe advice. Always add a medical disclaimer."
-        },
+        { role: "system", content: "You are a health AI doctor. Speak simply." },
         { role: "user", content: message }
-      ],
+      ]
     });
 
     return res.status(200).json({
-      reply: completion.choices[0].message.content,
+      reply: completion.choices[0].message.content
     });
-  } catch (err) {
-    console.error(err);
-    return res.status(500).json({ error: "OpenAI error" });
+
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: "OpenAI failed" });
   }
 }
